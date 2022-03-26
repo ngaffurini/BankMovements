@@ -18,7 +18,7 @@ public class ContatoriEntity {
     @Id
     @Indexed(unique = true)
     private String id;
-    private Integer sequence_value;
+    private Integer sequenceValue;
 
 
 }

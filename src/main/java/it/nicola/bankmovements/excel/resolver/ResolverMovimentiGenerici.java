@@ -7,6 +7,6 @@ public class ResolverMovimentiGenerici extends DynamicAutocompleteMov{
     public ResolverMovimentiGenerici(){}
 
     public ResolverMovimentiGenerici(DominiService dominiService){
-        super(dominiService, null);
+        super(dominiService);
     }
 }

@@ -11,14 +11,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellType;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 
 import java.io.*;
-import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.*;
 
 @Service
@@ -32,14 +35,12 @@ public class MovimentoService {
     private final ImportazioniService importazioniService;
     private final ContatoriService contatoriService;
     private final DominiService dominiService;
-    private final DominiSpesaService dominiSpesaService;
 
-    public MovimentoService(MovimentoRepository movimentoRepository, ImportazioniService importazioniService, ContatoriService contatoriService, DominiService dominiService, DominiSpesaService dominiSpesaService) {
+    public MovimentoService(MovimentoRepository movimentoRepository, ImportazioniService importazioniService, ContatoriService contatoriService, DominiService dominiService) {
         this.movimentoRepository = movimentoRepository;
         this.importazioniService = importazioniService;
         this.contatoriService = contatoriService;
         this.dominiService = dominiService;
-        this.dominiSpesaService = dominiSpesaService;
 
         caricaConfigurazioniAutocomplete();
     }
@@ -47,24 +48,30 @@ public class MovimentoService {
     private void caricaConfigurazioniAutocomplete(){
         dictionaryCodiciABI.put("18", new ResolverMovimentiGenerici(dominiService));
         dictionaryCodiciABI.put("27", new ResolverMovimentiStipendi(dominiService));
-        dictionaryCodiciABI.put("43", new ResolverMovimentiPagamenti(dominiService, dominiSpesaService));
-        dictionaryCodiciABI.put("50", new ResolverMovimentiAddebito(dominiService, dominiSpesaService));
+        dictionaryCodiciABI.put("43", new ResolverMovimentiPagamenti(dominiService));
+        dictionaryCodiciABI.put("50", new ResolverMovimentiAddebito(dominiService));
         dictionaryCodiciABI.put("60", new ResolverMovimentiGenerici(dominiService));
-        dictionaryCodiciABI.put("66", new ResolverMovimentiGenerici(dominiService));
+        dictionaryCodiciABI.put("66", new ResolverMovimentiTasseConto(dominiService));
         dictionaryCodiciABI.put("91", new ResolverMovimentiGenerici(dominiService));
+    }
+
+    public Page<MovimentoEntity> findAll(Pageable pagination){
+        return movimentoRepository.findAll(pagination);
     }
 
     public Page<MovimentoEntity> findAll(FiltriMovimenti filtriMovimenti, Pageable pagination){
         return movimentoRepository.findAll(pagination);
     }
 
-    public List<MovimentoEntity> importMovimentiFromXls() throws Exception{
-        FileInputStream in = new FileInputStream(new File("C:\\Users\\nicol\\Desktop\\BankMovement TEST\\XLS import\\Mov-Copia.xls"));
-        return processXlsBanksMovement(new HSSFWorkbook(in));
+    public Boolean importMovimentiFromXls() throws IOException, ParseException {
+        try(FileInputStream in = new FileInputStream(new File("C:\\Users\\nicol\\Desktop\\BankMovement TEST\\XLS import\\Movimenti2022.xls"))){
+            return processXlsBanksMovement(new HSSFWorkbook(in));
+        }
     }
 
-    private List<MovimentoEntity> processXlsBanksMovement(HSSFWorkbook workbook) throws Exception{
+    private Boolean processXlsBanksMovement(HSSFWorkbook workbook) throws ParseException{
         ImportazioneEntity imp = importazioniService.insertImportazioni(createImportazione());
+
         List<MovimentoEntity> movimenti = new ArrayList<>();
 
         HSSFSheet sheet =  workbook.getSheetAt(0);
@@ -77,34 +84,32 @@ public class MovimentoService {
 
             if(dictionaryCodiciABI.containsKey(row.getCausaleABI())) {
                 dictionaryCodiciABI.get(row.getCausaleABI()).autocompleteDynamicMovFields(movimento, row);
-
-                log.info(movimento.toString());
             }
 
-            isMovimentoValido(movimento);
-            movimentoRepository.insert(movimento);
+            movimento.setValido(isMovimentoValido(movimento));
             index++;
         }
 
-        return movimenti;
+        return this.saveAllMovimentiEntity(movimenti);
     }
 
-    public void saveAllMovimentiEntity(List<MovimentoEntity> movimenti){
+    public Boolean saveAllMovimentiEntity(List<MovimentoEntity> movimenti){
         movimentoRepository.saveAll(movimenti);
+        return true;
     }
 
-    private XLSModel getMovimentoFromRow(HSSFRow row) throws Exception {
-        DecimalFormat df = new DecimalFormat("0.00");
+    private XLSModel getMovimentoFromRow(HSSFRow row) throws ParseException {
         XLSModel objectRow = new XLSModel();
         objectRow.setData(DateUtils.getDateFromString(row.getCell(1).getStringCellValue()));
-        objectRow.setCausaleABI(row.getCell(3).getStringCellValue());
+        String codiceAbi = row.getCell(3).getCellType() == CellType.NUMERIC ? String.valueOf((int)row.getCell(3).getNumericCellValue()) : row.getCell(3).getStringCellValue();
+        objectRow.setCausaleABI(codiceAbi);
         objectRow.setDescrizione(row.getCell(4).getStringCellValue());
         objectRow.setImporto(row.getCell(5).getNumericCellValue());
 
         return objectRow;
     }
 
-    private MovimentoEntity mapXLSModelToMovimento(XLSModel row, Integer nImportazione) throws Exception {
+    private MovimentoEntity mapXLSModelToMovimento(XLSModel row, Integer nImportazione) {
         MovimentoEntity mov = new MovimentoEntity();
         mov.setData(row.getData());
         mov.setImporto(row.getImporto());
@@ -125,15 +130,22 @@ public class MovimentoService {
         return imp;
     }
 
-    private void isMovimentoValido(MovimentoEntity mov){
-        if(StringUtils.hasText(mov.getCategoria()) && StringUtils.hasText(mov.getDescrizione()) && mov.getImporto() != null && mov.getData() != null)
-            mov.setIsValido(true);
-        else
-            mov.setIsValido(false);
+    private boolean isMovimentoValido(MovimentoEntity mov){
+        return StringUtils.hasText(mov.getCategoria()) && StringUtils.hasText(mov.getDescrizione()) && mov.getImporto() != null && mov.getData() != null;
     }
 
-    public List<MovimentoEntity> findByNImportazione(Integer nImportazione){
-        return movimentoRepository.findBynImportazione(nImportazione);
+    public Page<MovimentoEntity> findByNImportazione(Integer nImportazione, PageRequest pagination){
+        return movimentoRepository.findBynImportazioneOrderByValido(nImportazione, pagination);
+    }
+
+    public Page<MovimentoEntity> findByValido(Boolean valido, PageRequest pagination){
+        pagination.getSort().and(Sort.by("nImportazione").ascending());
+
+        return movimentoRepository.findByValido(valido, pagination);
+    }
+
+    public Page<MovimentoEntity> findByValidoAndNImportazione(Boolean valido, Integer nImportazione, PageRequest pagination){
+        return movimentoRepository.findByValidoAndNImportazione(valido, nImportazione, pagination);
     }
 
     public void generateCSVFromNImportazione(Integer nImportazione) throws IOException {
@@ -152,8 +164,6 @@ public class MovimentoService {
                     log.error(e.getMessage(), e);
                 }
             });
-        } catch (IOException ex) {
-            throw ex;
         }
     }
 }

@@ -2,7 +2,6 @@ package it.nicola.bankmovements.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -22,7 +21,5 @@ public class MovimentoEntity {
     private Double importo;
     private String categoria;
     private Integer nImportazione;
-
-    @Transient
-    private Boolean isValido;
+    private Boolean valido;
 }

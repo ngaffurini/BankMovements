@@ -1,14 +1,13 @@
 package it.nicola.bankmovements.service.impl;
 
-import it.nicola.bankmovements.entity.DominiEntiy;
+import it.nicola.bankmovements.entity.DominiEntity;
 import it.nicola.bankmovements.repository.DominiRepository;
-import it.nicola.bankmovements.service.ServiceInterface;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class DominiService implements ServiceInterface {
+public class DominiService {
 
     private DominiRepository dominiRepository;
 
@@ -16,13 +15,23 @@ public class DominiService implements ServiceInterface {
         this.dominiRepository = dominiRepository;
     }
 
-    public DominiEntiy getDominioByCodiceABI(String codiceAbi){
-        return dominiRepository.getDominiEntiyByCodiceABI(codiceAbi);
+    public DominiEntity getDominioByCodiceAbi(String codiceAbi){
+        return dominiRepository.getDominiEntityByCodiceAbi(codiceAbi);
     }
 
-    public List<String> getDistinctCategoriaDomini(List<String> listCategoriaDominiSpesa){
-        List<String> domini = dominiRepository.getDistinctByCategoria();
-        domini.addAll(listCategoriaDominiSpesa);
-        return domini;
+    public List<String> getDistinctCategoriaDomini(){
+        return dominiRepository.getDistinctByCategoria();
+    }
+
+    public DominiEntity getDominioByDescrizione(String descrizione) {
+        return dominiRepository.findFirstByDescrizione(descrizione);
+    }
+
+    public DominiEntity getDominioByDescrizioneAndCodiceAbi(String descrizione, String codiceAbi) {
+        return dominiRepository.findFirstByDescrizioneAndCodiceAbi(descrizione, codiceAbi);
+    }
+
+    public DominiEntity insertDominiEntity(DominiEntity dominio){
+        return dominiRepository.save(dominio);
     }
 }

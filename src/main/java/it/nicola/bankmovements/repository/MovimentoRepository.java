@@ -18,4 +18,10 @@ public interface MovimentoRepository extends MongoRepository<MovimentoEntity, St
     Long deleteBynImportazione(Integer nImportazione);
 
     List<MovimentoEntity> findBynImportazione(Integer nImportazione);
+
+    Page<MovimentoEntity> findBynImportazioneOrderByValido(Integer nImportazione, Pageable pageable);
+
+    Page<MovimentoEntity> findByValido(Boolean valido, Pageable pageable);
+
+    Page<MovimentoEntity> findByValidoAndNImportazione(Boolean valido, Integer nImportazione, Pageable pageable);
 }

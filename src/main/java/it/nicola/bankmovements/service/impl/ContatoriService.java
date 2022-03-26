@@ -22,9 +22,9 @@ public class ContatoriService {
 
     public Integer next(String seqName){
         ContatoriEntity counter = mongoOperations.findAndModify(query(where("_id").is(seqName)),
-                new Update().inc("sequence_value",1), options().returnNew(true).upsert(true),
+                new Update().inc("sequenceValue",1), options().returnNew(true).upsert(true),
                 ContatoriEntity.class);
-        return !Objects.isNull(counter) ? counter.getSequence_value() : 1;
+        return !Objects.isNull(counter) ? counter.getSequenceValue() : 1;
 
     }
 }

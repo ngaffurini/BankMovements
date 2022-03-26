@@ -16,4 +16,5 @@ public class FiltriMovimenti {
     private String descrizione;
     private Date data;
     private Double importo;
+    private Integer nImportazione;
 }

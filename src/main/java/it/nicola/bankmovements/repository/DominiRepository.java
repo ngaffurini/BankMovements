@@ -1,15 +1,19 @@
 package it.nicola.bankmovements.repository;
 
-import it.nicola.bankmovements.entity.DominiEntiy;
+import it.nicola.bankmovements.entity.DominiEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface DominiRepository extends MongoRepository<DominiEntiy, String> {
+public interface DominiRepository extends MongoRepository<DominiEntity, String> {
 
-    public DominiEntiy getDominiEntiyByCodiceABI(String codiceABI);
+    DominiEntity getDominiEntityByCodiceAbi(String codiceABI);
 
-    public List<String> getDistinctByCategoria();
+    List<String> getDistinctByCategoria();
+
+    DominiEntity findFirstByDescrizione(String descrizione);
+
+    DominiEntity findFirstByDescrizioneAndCodiceAbi(String descrizione, String codiceAbi);
 }

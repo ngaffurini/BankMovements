@@ -6,6 +6,10 @@ import java.util.Date;
 
 public class DateUtils {
 
+    private DateUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String getStringTimeItalian(Date date){
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         return sdf.format(date);

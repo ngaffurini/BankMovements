@@ -1,6 +1,6 @@
 package it.nicola.bankmovements.controller;
 
-import it.nicola.bankmovements.entity.MovimentoEntity;
+import it.nicola.bankmovements.dto.MovimentoDto;
 import it.nicola.bankmovements.model.FiltriMovimenti;
 import it.nicola.bankmovements.model.JsonPageRequest;
 import it.nicola.bankmovements.model.PaginatedRequest;
@@ -23,12 +23,12 @@ public class MovimentoController {
     }
 
     @GetMapping("/list/all")
-    public Page<MovimentoEntity> findAll(JsonPageRequest pageRequest){
+    public Page<MovimentoDto> findAll(JsonPageRequest pageRequest){
         return movimentoService.findAll(pageRequest.toPageRequest());
     }
 
     @GetMapping("/list")
-    public Page<MovimentoEntity> getList(PaginatedRequest<FiltriMovimenti> paginatedRequest){
+    public Page<MovimentoDto> getList(PaginatedRequest<FiltriMovimenti> paginatedRequest){
         return movimentoService.findAll(paginatedRequest.getRequest(), paginatedRequest.getPaginator().toPageRequest());
     }
 
@@ -38,12 +38,12 @@ public class MovimentoController {
     }
 
     @GetMapping("/findByNImportazione")
-    public Page<MovimentoEntity> findByNImportazione(Integer nImportazione, JsonPageRequest pagination) {
+    public Page<MovimentoDto> findByNImportazione(Integer nImportazione, JsonPageRequest pagination) {
         return movimentoService.findByNImportazione(nImportazione, pagination.toPageRequest());
     }
 
     @GetMapping("/findByValido")
-    public Page<MovimentoEntity> findByValido(Boolean valido, JsonPageRequest pagination) {
+    public Page<MovimentoDto> findByValido(Boolean valido, JsonPageRequest pagination) {
         return movimentoService.findByValido(valido, pagination.toPageRequest());
     }
 
@@ -53,7 +53,7 @@ public class MovimentoController {
     }
 
     @PostMapping("/saveListMovimenti")
-    public void saveListMovimenti(List<MovimentoEntity> movimenti) {
+    public void saveListMovimenti(List<MovimentoDto> movimenti) {
         movimentoService.saveAllMovimentiEntity(movimenti);
     }
 
@@ -63,7 +63,7 @@ public class MovimentoController {
     }
 
     @GetMapping("/findByValidoAndNImportazione")
-    public Page<MovimentoEntity> findByValidoAndNImportazione(Boolean valido, Integer nImportazione, JsonPageRequest pageRequest){
+    public Page<MovimentoDto> findByValidoAndNImportazione(Boolean valido, Integer nImportazione, JsonPageRequest pageRequest){
         return movimentoService.findByValidoAndNImportazione(valido, nImportazione, pageRequest.toPageRequest());
     }
 }

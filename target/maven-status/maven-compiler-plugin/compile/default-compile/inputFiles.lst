@@ -16,6 +16,7 @@ C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmoveme
 C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\model\ChiaveValore.java
 C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\dto\MovimentoDto.java
 C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\configuration\SwaggerConfig.java
+C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\mapper\DtoToEntityBidirectionalMapper.java
 C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\configuration\SecurityConfig.java
 C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\controller\ImportazioniController.java
 C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\entity\ContatoriEntity.java

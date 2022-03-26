@@ -1,7 +1,7 @@
 package it.nicola.bankmovements.excel.resolver;
 
+import it.nicola.bankmovements.dto.MovimentoDto;
 import it.nicola.bankmovements.entity.DominiEntity;
-import it.nicola.bankmovements.entity.MovimentoEntity;
 import it.nicola.bankmovements.service.impl.DominiService;
 import it.nicola.bankmovements.xls.XLSModel;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ public class ResolverMovimentiPagamenti extends DynamicAutocompleteMov{
     }
 
     @Override
-    public void autocompleteDynamicMovFields(MovimentoEntity mov, XLSModel xlsModel){
+    public void autocompleteDynamicMovFields(MovimentoDto mov, XLSModel xlsModel){
         String descrizione;
         if(xlsModel.getDescrizione().contains("\\ \\")){
             descrizione = xlsModel.getDescrizione().substring(xlsModel.getDescrizione().indexOf("PRESSO ") + 7, xlsModel.getDescrizione().indexOf("\\ \\")).trim();

@@ -1,8 +1,10 @@
 package it.nicola.bankmovements.service.impl;
 
+import it.nicola.bankmovements.dto.MovimentoDto;
 import it.nicola.bankmovements.entity.ImportazioneEntity;
 import it.nicola.bankmovements.entity.MovimentoEntity;
 import it.nicola.bankmovements.excel.resolver.*;
+import it.nicola.bankmovements.mapper.MovimentoMapper;
 import it.nicola.bankmovements.model.FiltriMovimenti;
 import it.nicola.bankmovements.repository.MovimentoRepository;
 import it.nicola.bankmovements.utils.DateUtils;
@@ -12,10 +14,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellType;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -35,12 +34,14 @@ public class MovimentoService {
     private final ImportazioniService importazioniService;
     private final ContatoriService contatoriService;
     private final DominiService dominiService;
+    private final MovimentoMapper movimentoMapper;
 
-    public MovimentoService(MovimentoRepository movimentoRepository, ImportazioniService importazioniService, ContatoriService contatoriService, DominiService dominiService) {
+    public MovimentoService(MovimentoRepository movimentoRepository, ImportazioniService importazioniService, ContatoriService contatoriService, DominiService dominiService, MovimentoMapper movimentoMapper) {
         this.movimentoRepository = movimentoRepository;
         this.importazioniService = importazioniService;
         this.contatoriService = contatoriService;
         this.dominiService = dominiService;
+        this.movimentoMapper = movimentoMapper;
 
         caricaConfigurazioniAutocomplete();
     }
@@ -55,12 +56,22 @@ public class MovimentoService {
         dictionaryCodiciABI.put("91", new ResolverMovimentiGenerici(dominiService));
     }
 
-    public Page<MovimentoEntity> findAll(Pageable pagination){
-        return movimentoRepository.findAll(pagination);
+    public Page<MovimentoDto> findAll(Pageable pagination){
+        Page<MovimentoEntity> movimentoEntitiesList = movimentoRepository.findAll(pagination);
+
+        return new PageImpl<>(
+                movimentoMapper.toDtos(movimentoEntitiesList.getContent()),
+                movimentoEntitiesList.getPageable(),
+                movimentoEntitiesList.getTotalElements());
     }
 
-    public Page<MovimentoEntity> findAll(FiltriMovimenti filtriMovimenti, Pageable pagination){
-        return movimentoRepository.findAll(pagination);
+    public Page<MovimentoDto> findAll(FiltriMovimenti filtriMovimenti, Pageable pagination){
+        Page<MovimentoEntity> movimentoEntitiesList = movimentoRepository.findAll(pagination);
+
+        return new PageImpl<>(
+                movimentoMapper.toDtos(movimentoEntitiesList.getContent()),
+                movimentoEntitiesList.getPageable(),
+                movimentoEntitiesList.getTotalElements());
     }
 
     public Boolean importMovimentiFromXls() throws IOException, ParseException {
@@ -72,14 +83,14 @@ public class MovimentoService {
     private Boolean processXlsBanksMovement(HSSFWorkbook workbook) throws ParseException{
         ImportazioneEntity imp = importazioniService.insertImportazioni(createImportazione());
 
-        List<MovimentoEntity> movimenti = new ArrayList<>();
+        List<MovimentoDto> movimenti = new ArrayList<>();
 
         HSSFSheet sheet =  workbook.getSheetAt(0);
 
         int index = 9;
         while(StringUtils.hasText(sheet.getRow(index).getCell(1).getStringCellValue())){
             XLSModel row = getMovimentoFromRow(sheet.getRow(index));
-            MovimentoEntity movimento = mapXLSModelToMovimento(row, imp.getId());
+            MovimentoDto movimento = mapXLSModelToMovimento(row, imp.getId());
             movimenti.add(movimento);
 
             if(dictionaryCodiciABI.containsKey(row.getCausaleABI())) {
@@ -93,8 +104,8 @@ public class MovimentoService {
         return this.saveAllMovimentiEntity(movimenti);
     }
 
-    public Boolean saveAllMovimentiEntity(List<MovimentoEntity> movimenti){
-        movimentoRepository.saveAll(movimenti);
+    public Boolean saveAllMovimentiEntity(List<MovimentoDto> movimenti){
+        movimentoRepository.saveAll(movimentoMapper.toEntities(movimenti));
         return true;
     }
 
@@ -109,8 +120,8 @@ public class MovimentoService {
         return objectRow;
     }
 
-    private MovimentoEntity mapXLSModelToMovimento(XLSModel row, Integer nImportazione) {
-        MovimentoEntity mov = new MovimentoEntity();
+    private MovimentoDto mapXLSModelToMovimento(XLSModel row, Integer nImportazione) {
+        MovimentoDto mov = new MovimentoDto();
         mov.setData(row.getData());
         mov.setImporto(row.getImporto());
         mov.setNImportazione(nImportazione);
@@ -130,26 +141,41 @@ public class MovimentoService {
         return imp;
     }
 
-    private boolean isMovimentoValido(MovimentoEntity mov){
+    private boolean isMovimentoValido(MovimentoDto mov){
         return StringUtils.hasText(mov.getCategoria()) && StringUtils.hasText(mov.getDescrizione()) && mov.getImporto() != null && mov.getData() != null;
     }
 
-    public Page<MovimentoEntity> findByNImportazione(Integer nImportazione, PageRequest pagination){
-        return movimentoRepository.findBynImportazioneOrderByValido(nImportazione, pagination);
+    public Page<MovimentoDto> findByNImportazione(Integer nImportazione, PageRequest pagination){
+        Page<MovimentoEntity> movimentoEntitiesList = movimentoRepository.findBynImportazioneOrderByValido(nImportazione, pagination);
+
+        return new PageImpl<>(
+            movimentoMapper.toDtos(movimentoEntitiesList.getContent()),
+            movimentoEntitiesList.getPageable(),
+            movimentoEntitiesList.getTotalElements());
     }
 
-    public Page<MovimentoEntity> findByValido(Boolean valido, PageRequest pagination){
+    public Page<MovimentoDto> findByValido(Boolean valido, PageRequest pagination){
         pagination.getSort().and(Sort.by("nImportazione").ascending());
 
-        return movimentoRepository.findByValido(valido, pagination);
+        Page<MovimentoEntity> movimentoEntitiesList = movimentoRepository.findByValido(valido, pagination);
+
+        return new PageImpl<>(
+          movimentoMapper.toDtos(movimentoEntitiesList.getContent()),
+          movimentoEntitiesList.getPageable(),
+          movimentoEntitiesList.getTotalElements());
     }
 
-    public Page<MovimentoEntity> findByValidoAndNImportazione(Boolean valido, Integer nImportazione, PageRequest pagination){
-        return movimentoRepository.findByValidoAndNImportazione(valido, nImportazione, pagination);
+    public Page<MovimentoDto> findByValidoAndNImportazione(Boolean valido, Integer nImportazione, PageRequest pagination){
+        Page<MovimentoEntity> movimentoEntitiesList = movimentoRepository.findByValidoAndNImportazione(valido, nImportazione, pagination);;
+
+        return new PageImpl<>(
+                movimentoMapper.toDtos(movimentoEntitiesList.getContent()),
+                movimentoEntitiesList.getPageable(),
+                movimentoEntitiesList.getTotalElements());
     }
 
     public void generateCSVFromNImportazione(Integer nImportazione) throws IOException {
-        List<MovimentoEntity> movimenti = movimentoRepository.findBynImportazione(nImportazione);
+        List<MovimentoDto> movimenti = movimentoMapper.toDtos(movimentoRepository.findBynImportazione(nImportazione));
 
         String nomeFile = "Movimenti" + ".csv";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\nicol\\Desktop\\BankMovement TEST\\CSV output\\"+nomeFile))) {

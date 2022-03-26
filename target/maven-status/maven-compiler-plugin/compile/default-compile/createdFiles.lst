@@ -19,6 +19,7 @@ it\nicola\bankmovements\utils\DateUtils.class
 it\nicola\bankmovements\model\ChiaveValore.class
 it\nicola\bankmovements\excel\resolver\ResolverMovimentiGenerici.class
 it\nicola\bankmovements\entity\MovimentoEntity.class
+it\nicola\bankmovements\mapper\DtoToEntityBidirectionalMapper.class
 it\nicola\bankmovements\excel\resolver\DynamicAutocompleteMov.class
 it\nicola\bankmovements\excel\resolver\ResolverMovimentiTasseConto.class
 it\nicola\bankmovements\configuration\SecurityConfig.class

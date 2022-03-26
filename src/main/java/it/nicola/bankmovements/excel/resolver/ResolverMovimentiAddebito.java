@@ -1,7 +1,7 @@
 package it.nicola.bankmovements.excel.resolver;
 
+import it.nicola.bankmovements.dto.MovimentoDto;
 import it.nicola.bankmovements.entity.DominiEntity;
-import it.nicola.bankmovements.entity.MovimentoEntity;
 import it.nicola.bankmovements.service.impl.DominiService;
 import it.nicola.bankmovements.xls.XLSModel;
 
@@ -19,7 +19,7 @@ public class ResolverMovimentiAddebito extends DynamicAutocompleteMov {
     }
 
     @Override
-    public void autocompleteDynamicMovFields(MovimentoEntity mov, XLSModel xlsModel){
+    public void autocompleteDynamicMovFields(MovimentoDto mov, XLSModel xlsModel){
         if(xlsModel.getDescrizione().contains("FAV. DI ")) {
             int startIndex = xlsModel.getDescrizione().indexOf("FAV. DI ") + 8;
             int endIndex = startIndex + 29;

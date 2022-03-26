@@ -5,9 +5,6 @@ import it.nicola.bankmovements.entity.MovimentoEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface MovimentoMapper {
+public interface MovimentoMapper extends DtoToEntityBidirectionalMapper<MovimentoDto, MovimentoEntity>{
 
-    MovimentoDto entityToDto(MovimentoEntity movimentoEntity);
-
-    MovimentoEntity dtoToEntity(MovimentoEntity movimentoEntity);
 }

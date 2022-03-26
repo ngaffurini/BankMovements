@@ -166,7 +166,7 @@ public class MovimentoService {
     }
 
     public Page<MovimentoDto> findByValidoAndNImportazione(Boolean valido, Integer nImportazione, PageRequest pagination){
-        Page<MovimentoEntity> movimentoEntitiesList = movimentoRepository.findByValidoAndNImportazione(valido, nImportazione, pagination);;
+        Page<MovimentoEntity> movimentoEntitiesList = movimentoRepository.findByValidoAndNImportazione(valido, nImportazione, pagination);
 
         return new PageImpl<>(
                 movimentoMapper.toDtos(movimentoEntitiesList.getContent()),

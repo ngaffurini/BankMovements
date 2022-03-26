@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// FIXME check if needs
 public interface DtoToEntityBidirectionalMapper<D, E> {
   // Override only if strictly necessary.
   default List<D> toDtos(List<E> entityList) {

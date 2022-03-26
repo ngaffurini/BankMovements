@@ -1,6 +1,0 @@
-projectKey=BankMovements-BE
-serverUrl=http://localhost:9000
-serverVersion=9.3.0.51899
-dashboardUrl=http://localhost:9000/dashboard?id=BankMovements-BE
-ceTaskId=AX_GwZJyddoiHyOmmlmv
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AX_GwZJyddoiHyOmmlmv

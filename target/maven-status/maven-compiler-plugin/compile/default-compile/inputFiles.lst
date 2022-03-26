@@ -22,6 +22,7 @@ C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmoveme
 C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\entity\MovimentoEntity.java
 C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\xls\XLSModel.java
 C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\model\JsonPageRequest.java
+C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\mapper\DominiMapper.java
 C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\model\FiltriMovimenti.java
 C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\repository\DominiRepository.java
 C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\service\impl\DominiService.java
@@ -31,3 +32,5 @@ C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmoveme
 C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\entity\ImportazioneEntity.java
 C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\repository\MovimentoRepository.java
 C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\entity\DominiEntity.java
+C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\dto\DominiDto.java
+C:\Documenti\Intellij Workspace\BankMovements\src\main\java\it\nicola\bankmovements\mapper\MovimentoMapper.java

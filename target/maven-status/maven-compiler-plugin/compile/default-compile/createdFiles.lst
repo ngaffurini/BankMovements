@@ -1,4 +1,5 @@
 it\nicola\bankmovements\repository\ImportazioneRepository.class
+it\nicola\bankmovements\dto\DominiDto.class
 it\nicola\bankmovements\excel\resolver\ResolverMovimentiStipendi.class
 it\nicola\bankmovements\entity\ImportazioneEntity.class
 it\nicola\bankmovements\controller\DominiController.class
@@ -7,6 +8,8 @@ it\nicola\bankmovements\repository\MovimentoRepository.class
 it\nicola\bankmovements\excel\resolver\ResolverMovimentiAddebito.class
 it\nicola\bankmovements\service\impl\ImportazioniService.class
 it\nicola\bankmovements\dto\MovimentoDto.class
+it\nicola\bankmovements\mapper\MovimentoMapper.class
+it\nicola\bankmovements\mapper\MovimentoMapperImpl.class
 it\nicola\bankmovements\service\impl\MovimentoService.class
 it\nicola\bankmovements\model\FiltriMovimenti.class
 it\nicola\bankmovements\entity\DominiEntity.class
@@ -20,11 +23,13 @@ it\nicola\bankmovements\excel\resolver\DynamicAutocompleteMov.class
 it\nicola\bankmovements\excel\resolver\ResolverMovimentiTasseConto.class
 it\nicola\bankmovements\configuration\SecurityConfig.class
 it\nicola\bankmovements\entity\DominiEntity$DominiEntityBuilder.class
+it\nicola\bankmovements\mapper\DominiMapper.class
 it\nicola\bankmovements\entity\ContatoriEntity.class
 it\nicola\bankmovements\repository\ContatoriRepository.class
 it\nicola\bankmovements\controller\ImportazioniController.class
 it\nicola\bankmovements\model\JsonPageRequest.class
 it\nicola\bankmovements\controller\MovimentoController.class
+it\nicola\bankmovements\mapper\DominiMapperImpl.class
 it\nicola\bankmovements\model\Ordine.class
 it\nicola\bankmovements\configuration\SwaggerConfig.class
 it\nicola\bankmovements\entity\CategoriaEntity.class

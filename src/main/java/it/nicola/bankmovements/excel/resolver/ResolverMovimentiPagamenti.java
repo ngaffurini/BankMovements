@@ -2,7 +2,6 @@ package it.nicola.bankmovements.excel.resolver;
 
 import it.nicola.bankmovements.dto.DominiDto;
 import it.nicola.bankmovements.dto.MovimentoDto;
-import it.nicola.bankmovements.entity.DominiEntity;
 import it.nicola.bankmovements.service.impl.DominiService;
 import it.nicola.bankmovements.xls.XLSModel;
 import lombok.extern.slf4j.Slf4j;

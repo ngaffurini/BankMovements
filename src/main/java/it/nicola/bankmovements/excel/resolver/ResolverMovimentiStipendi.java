@@ -1,5 +1,6 @@
 package it.nicola.bankmovements.excel.resolver;
 
+import it.nicola.bankmovements.dto.DominiDto;
 import it.nicola.bankmovements.dto.MovimentoDto;
 import it.nicola.bankmovements.entity.DominiEntity;
 import it.nicola.bankmovements.service.impl.DominiService;
@@ -15,7 +16,7 @@ public class ResolverMovimentiStipendi extends DynamicAutocompleteMov{
 
     @Override
     public void autocompleteDynamicMovFields(MovimentoDto mov, XLSModel xlsModel){
-        DominiEntity dom = dominiService.getDominioByCodiceAbi(xlsModel.getCausaleABI());
+        DominiDto dom = dominiService.getDominioByCodiceAbi(xlsModel.getCausaleABI());
 
         mov.setCategoria(dom.getCategoria());
         mov.setDescrizione(dom.getDescrizione());

@@ -1,5 +1,6 @@
 package it.nicola.bankmovements.excel.resolver;
 
+import it.nicola.bankmovements.dto.DominiDto;
 import it.nicola.bankmovements.dto.MovimentoDto;
 import it.nicola.bankmovements.entity.DominiEntity;
 import it.nicola.bankmovements.service.impl.DominiService;
@@ -20,7 +21,7 @@ public class ResolverMovimentiTasseConto extends DynamicAutocompleteMov{
         String descrizione = xlsModel.getDescrizione();
         boolean isImpostaBollo = descrizione.startsWith(IMPOSTA_BOLLO);
 
-        DominiEntity ds = dominiService.getDominioByDescrizione(isImpostaBollo ? IMPOSTA_BOLLO : descrizione);
+        DominiDto ds = dominiService.getDominioByDescrizione(isImpostaBollo ? IMPOSTA_BOLLO : descrizione);
 
         if(ds != null) {
             mov.setCategoria(ds.getCategoria());

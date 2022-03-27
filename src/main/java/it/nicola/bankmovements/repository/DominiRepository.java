@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface DominiRepository extends MongoRepository<DominiEntity, String> {
 
-    DominiEntity getDominiEntityByCodiceAbi(String codiceABI);
+    DominiEntity getFirstByCodiceAbi(String codiceABI);
 
     List<String> getDistinctByCategoria();
 

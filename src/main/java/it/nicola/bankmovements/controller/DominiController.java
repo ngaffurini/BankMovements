@@ -1,5 +1,6 @@
 package it.nicola.bankmovements.controller;
 
+import it.nicola.bankmovements.dto.DominiDto;
 import it.nicola.bankmovements.entity.DominiEntity;
 import it.nicola.bankmovements.service.impl.DominiService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ public class DominiController {
     }
 
     @PostMapping("/insert")
-    public DominiEntity insertDominiEntity(DominiEntity dominio){
+    public DominiDto insertDominiEntity(DominiDto dominio){
         return dominiService.insertDominiEntity(dominio);
     }
 }

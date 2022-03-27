@@ -1,6 +1,8 @@
 package it.nicola.bankmovements.service.impl;
 
+import it.nicola.bankmovements.dto.DominiDto;
 import it.nicola.bankmovements.entity.DominiEntity;
+import it.nicola.bankmovements.mapper.DominiMapper;
 import it.nicola.bankmovements.repository.DominiRepository;
 import org.springframework.stereotype.Service;
 
@@ -10,28 +12,31 @@ import java.util.List;
 public class DominiService {
 
     private DominiRepository dominiRepository;
+    private DominiMapper dominiMapper;
 
-    public DominiService(DominiRepository dominiRepository) {
+    public DominiService(DominiRepository dominiRepository, DominiMapper dominiMapper) {
         this.dominiRepository = dominiRepository;
+        this.dominiMapper = dominiMapper;
     }
 
-    public DominiEntity getDominioByCodiceAbi(String codiceAbi){
-        return dominiRepository.getDominiEntityByCodiceAbi(codiceAbi);
+    public DominiDto getDominioByCodiceAbi(String codiceAbi){
+        return dominiMapper.toDto(dominiRepository.getFirstByCodiceAbi(codiceAbi));
     }
 
     public List<String> getDistinctCategoriaDomini(){
         return dominiRepository.getDistinctByCategoria();
     }
 
-    public DominiEntity getDominioByDescrizione(String descrizione) {
-        return dominiRepository.findFirstByDescrizione(descrizione);
+    public DominiDto getDominioByDescrizione(String descrizione) {
+        return dominiMapper.toDto(dominiRepository.findFirstByDescrizione(descrizione));
     }
 
-    public DominiEntity getDominioByDescrizioneAndCodiceAbi(String descrizione, String codiceAbi) {
-        return dominiRepository.findFirstByDescrizioneAndCodiceAbi(descrizione, codiceAbi);
+    public DominiDto getDominioByDescrizioneAndCodiceAbi(String descrizione, String codiceAbi) {
+        return dominiMapper.toDto(dominiRepository.findFirstByDescrizioneAndCodiceAbi(descrizione, codiceAbi));
     }
 
-    public DominiEntity insertDominiEntity(DominiEntity dominio){
-        return dominiRepository.save(dominio);
+    public DominiDto insertDominiEntity(DominiDto dominio){
+        DominiEntity dom = dominiMapper.toEntity(dominio);
+        return dominiMapper.toDto(dominiRepository.save(dom));
     }
 }

@@ -4,10 +4,7 @@ import it.nicola.bankmovements.dto.DominiDto;
 import it.nicola.bankmovements.entity.DominiEntity;
 import org.mapstruct.Mapper;
 
-@Mapper
-public interface DominiMapper {
+@Mapper(componentModel = "spring")
+public interface DominiMapper extends DtoToEntityBidirectionalMapper<DominiDto, DominiEntity> {
 
-    DominiDto entityToDto(DominiEntity dominiEntity);
-
-    DominiEntity dtoToEntity(DominiDto dominiDto);
 }

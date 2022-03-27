@@ -33,13 +33,18 @@ public class MovimentoController {
     }
 
     @GetMapping("/importMovimenti")
-    public Boolean importMovimentiFromXls() throws IOException, ParseException {
+    public Integer importMovimentiFromXls() throws IOException, ParseException {
         return movimentoService.importMovimentiFromXls();
     }
 
     @GetMapping("/findByNImportazione")
     public Page<MovimentoDto> findByNImportazione(Integer nImportazione, JsonPageRequest pagination) {
         return movimentoService.findByNImportazione(nImportazione, pagination.toPageRequest());
+    }
+
+    @GetMapping("/findByNImportazioneList")
+    public List<MovimentoDto> findByNImportazioneList(Integer nImportazione) {
+        return movimentoService.findByNImportazioneList(nImportazione);
     }
 
     @GetMapping("/findByValido")

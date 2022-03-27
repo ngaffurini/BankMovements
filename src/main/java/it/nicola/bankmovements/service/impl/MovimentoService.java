@@ -74,13 +74,13 @@ public class MovimentoService {
                 movimentoEntitiesList.getTotalElements());
     }
 
-    public Boolean importMovimentiFromXls() throws IOException, ParseException {
+    public Integer importMovimentiFromXls() throws IOException, ParseException {
         try(FileInputStream in = new FileInputStream(new File("C:\\Users\\nicol\\Desktop\\BankMovement TEST\\XLS import\\Movimenti2022.xls"))){
             return processXlsBanksMovement(new HSSFWorkbook(in));
         }
     }
 
-    private Boolean processXlsBanksMovement(HSSFWorkbook workbook) throws ParseException{
+    private Integer processXlsBanksMovement(HSSFWorkbook workbook) throws ParseException{
         ImportazioneEntity imp = importazioniService.insertImportazioni(createImportazione());
 
         List<MovimentoDto> movimenti = new ArrayList<>();
@@ -101,7 +101,9 @@ public class MovimentoService {
             index++;
         }
 
-        return this.saveAllMovimentiEntity(movimenti);
+        this.saveAllMovimentiEntity(movimenti);
+
+        return imp.getId();
     }
 
     public Boolean saveAllMovimentiEntity(List<MovimentoDto> movimenti){
@@ -191,5 +193,9 @@ public class MovimentoService {
                 }
             });
         }
+    }
+
+    public List<MovimentoDto> findByNImportazioneList(Integer nImportazione) {
+        return movimentoMapper.toDtos(movimentoRepository.findBynImportazione(nImportazione));
     }
 }

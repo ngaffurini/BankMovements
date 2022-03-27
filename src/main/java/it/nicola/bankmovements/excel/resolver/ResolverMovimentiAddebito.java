@@ -1,5 +1,6 @@
 package it.nicola.bankmovements.excel.resolver;
 
+import it.nicola.bankmovements.dto.DominiDto;
 import it.nicola.bankmovements.dto.MovimentoDto;
 import it.nicola.bankmovements.entity.DominiEntity;
 import it.nicola.bankmovements.service.impl.DominiService;
@@ -25,17 +26,17 @@ public class ResolverMovimentiAddebito extends DynamicAutocompleteMov {
             int endIndex = startIndex + 29;
             String descrizione = xlsModel.getDescrizione().substring(startIndex, endIndex).trim();
 
-            DominiEntity ds = dominiService.getDominioByDescrizione(descrizione);
+            DominiDto ds = dominiService.getDominioByDescrizione(descrizione);
 
             mov.setCategoria(ds.getCategoria());
             mov.setDescrizione(descrizione);
         }else if(xlsModel.getDescrizione().contains(CARICAMENTO_PREPAGATA)){
-            DominiEntity dom = dominiService.getDominioByDescrizione(RICARICA_PREPAGATA);
+            DominiDto dom = dominiService.getDominioByDescrizione(RICARICA_PREPAGATA);
 
             mov.setCategoria(dom.getCategoria());
             mov.setDescrizione(dom.getDescrizione());
         }else if(xlsModel.getDescrizione().contains(PAGAMENTO_AUTOSTRADA)){
-            DominiEntity dom = dominiService.getDominioByDescrizione(PAG_FASTPAY);
+            DominiDto dom = dominiService.getDominioByDescrizione(PAG_FASTPAY);
 
             mov.setCategoria(dom.getCategoria());
             mov.setDescrizione(dom.getDescrizione());

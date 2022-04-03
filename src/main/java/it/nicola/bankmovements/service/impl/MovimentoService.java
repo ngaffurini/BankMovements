@@ -15,6 +15,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellType;
 import org.springframework.data.domain.*;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -66,16 +67,21 @@ public class MovimentoService {
     }
 
     public Page<MovimentoDto> findAll(FiltriMovimenti filtriMovimenti, Pageable pagination){
-        Page<MovimentoEntity> movimentoEntitiesList = movimentoRepository.findAll(pagination);
+        Page<MovimentoEntity> movimentoEntitiesList = movimentoRepository.findMovimentoEntityByProperties(filtriMovimenti, pagination);
+//        Page<MovimentoEntity> movimentoEntitiesList = movimentoRepository.findAll(pagination);
 
         return new PageImpl<>(
                 movimentoMapper.toDtos(movimentoEntitiesList.getContent()),
                 movimentoEntitiesList.getPageable(),
                 movimentoEntitiesList.getTotalElements());
+        /*return new PageImpl<MovimentoDto>(
+                movimentoMapper.toDtos(movimentoEntitiesList),
+                pagination,
+                movimentoEntitiesList.getTotalElements());*/
     }
 
     public Integer importMovimentiFromXls() throws IOException, ParseException {
-        try(FileInputStream in = new FileInputStream(new File("C:\\Users\\nicol\\Desktop\\BankMovement TEST\\XLS import\\Movimenti2022.xls"))){
+        try(FileInputStream in = new FileInputStream("C:\\Users\\nicol\\Desktop\\BankMovement TEST\\XLS import\\Movimenti2022.xls")){
             return processXlsBanksMovement(new HSSFWorkbook(in));
         }
     }
@@ -106,9 +112,8 @@ public class MovimentoService {
         return imp.getId();
     }
 
-    public Boolean saveAllMovimentiEntity(List<MovimentoDto> movimenti){
+    public void saveAllMovimentiEntity(List<MovimentoDto> movimenti){
         movimentoRepository.saveAll(movimentoMapper.toEntities(movimenti));
-        return true;
     }
 
     private XLSModel getMovimentoFromRow(HSSFRow row) throws ParseException {

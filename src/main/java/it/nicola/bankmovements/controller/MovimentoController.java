@@ -22,6 +22,11 @@ public class MovimentoController {
         this.movimentoService = movimentoService;
     }
 
+    @GetMapping("/{id}")
+    public MovimentoDto getById(@PathVariable("id") String id){
+        return movimentoService.getById(id);
+    }
+
     @GetMapping("/list/all")
     public Page<MovimentoDto> findAll(JsonPageRequest pageRequest){
         return movimentoService.findAll(pageRequest.toPageRequest());
@@ -29,7 +34,7 @@ public class MovimentoController {
 
     @PostMapping("/list")
     public Page<MovimentoDto> getList(@RequestBody PaginatedRequest<FiltriMovimenti> paginatedRequest){
-        return movimentoService.findAll((FiltriMovimenti) paginatedRequest.getRequest(), paginatedRequest.getPaginator().toPageRequest());
+        return movimentoService.findAll(paginatedRequest.getRequest(), paginatedRequest.getPaginator().toPageRequest());
     }
 
     @GetMapping("/importMovimenti")

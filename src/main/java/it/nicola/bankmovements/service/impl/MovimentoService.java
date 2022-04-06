@@ -1,5 +1,7 @@
 package it.nicola.bankmovements.service.impl;
 
+import it.nicola.bankmovements.common.enums.ErrorType;
+import it.nicola.bankmovements.common.exception.CustomNotFoundException;
 import it.nicola.bankmovements.dto.MovimentoDto;
 import it.nicola.bankmovements.entity.ImportazioneEntity;
 import it.nicola.bankmovements.entity.MovimentoEntity;
@@ -68,22 +70,28 @@ public class MovimentoService {
 
     public Page<MovimentoDto> findAll(FiltriMovimenti filtriMovimenti, Pageable pagination){
         Page<MovimentoEntity> movimentoEntitiesList = movimentoRepository.findMovimentoEntityByProperties(filtriMovimenti, pagination);
-//        Page<MovimentoEntity> movimentoEntitiesList = movimentoRepository.findAll(pagination);
+
+        if(movimentoEntitiesList == null)
+            return null;
 
         return new PageImpl<>(
                 movimentoMapper.toDtos(movimentoEntitiesList.getContent()),
                 movimentoEntitiesList.getPageable(),
                 movimentoEntitiesList.getTotalElements());
-        /*return new PageImpl<MovimentoDto>(
-                movimentoMapper.toDtos(movimentoEntitiesList),
-                pagination,
-                movimentoEntitiesList.getTotalElements());*/
     }
 
     public Integer importMovimentiFromXls() throws IOException, ParseException {
         try(FileInputStream in = new FileInputStream("C:\\Users\\nicol\\Desktop\\BankMovement TEST\\XLS import\\Movimenti2022.xls")){
             return processXlsBanksMovement(new HSSFWorkbook(in));
         }
+    }
+
+    public MovimentoDto getById(String id){
+        Optional<MovimentoEntity> mov = movimentoRepository.findById(id);
+
+        if(!mov.isPresent())
+            throw new CustomNotFoundException(ErrorType.MOVIMENTO_NON_TROVATO);
+        return movimentoMapper.toDto(mov.get());
     }
 
     private Integer processXlsBanksMovement(HSSFWorkbook workbook) throws ParseException{

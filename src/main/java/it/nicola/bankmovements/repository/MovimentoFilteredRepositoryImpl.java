@@ -25,7 +25,7 @@ public class MovimentoFilteredRepositoryImpl implements MovimentoFilteredReposit
     public Page<MovimentoEntity> findMovimentoEntityByProperties(FiltriMovimenti movimenti, Pageable pageable) {
         final Query query = new Query();
 
-        final List<Criteria> criteriaList = new ArrayList<Criteria>();
+        final List<Criteria> criteriaList = new ArrayList<>();
         if(StringUtils.isNotBlank(movimenti.getCategoria()))
             criteriaList.add(Criteria.where("categoria").is(movimenti.getCategoria()));
         else if(StringUtils.isNotBlank(movimenti.getDescrizione()))
@@ -39,18 +39,18 @@ public class MovimentoFilteredRepositoryImpl implements MovimentoFilteredReposit
 
 
         if(!criteriaList.isEmpty()){
-            query.with(pageable);
             query.addCriteria(new Criteria().andOperator(criteriaList.toArray(new Criteria[criteriaList.size()])));
+
+            Long numElementi = mongoTemplate.count(query, MovimentoEntity.class);
+
+            query.with(pageable);
 
             return new PageImpl<>(
                     mongoTemplate.find(query, MovimentoEntity.class),
                     pageable,
-                    mongoTemplate.count(query, MovimentoEntity.class));
+                    numElementi);
         }
 
-        return new PageImpl<>(
-                mongoTemplate.find(query, MovimentoEntity.class),
-                pageable,
-                mongoTemplate.count(query, MovimentoEntity.class));
+        return null;
     }
 }

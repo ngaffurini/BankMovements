@@ -38,19 +38,20 @@ public class MovimentoFilteredRepositoryImpl implements MovimentoFilteredReposit
             criteriaList.add(new Criteria("nImportazione").is(movimenti.getNImportazione()));
 
 
-        if(!criteriaList.isEmpty()){
+        if(!criteriaList.isEmpty()) {
             query.addCriteria(new Criteria().andOperator(criteriaList.toArray(new Criteria[criteriaList.size()])));
-
-            Long numElementi = mongoTemplate.count(query, MovimentoEntity.class);
-
-            query.with(pageable);
-
-            return new PageImpl<>(
-                    mongoTemplate.find(query, MovimentoEntity.class),
-                    pageable,
-                    numElementi);
         }
 
-        return null;
+        Long numElementi = mongoTemplate.count(query, MovimentoEntity.class);
+
+        query.with(pageable);
+
+        return new PageImpl<>(
+                mongoTemplate.find(query, MovimentoEntity.class),
+                pageable,
+                numElementi);
+
+
+       // return null;
     }
 }

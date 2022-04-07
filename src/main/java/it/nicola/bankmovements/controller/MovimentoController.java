@@ -33,7 +33,7 @@ public class MovimentoController {
     }
 
     @PostMapping("/list")
-    public Page<MovimentoDto> getList(@RequestBody PaginatedRequest<FiltriMovimenti> paginatedRequest){
+    public Page<MovimentoDto> getListMovimenti(@RequestBody PaginatedRequest<FiltriMovimenti> paginatedRequest){
         return movimentoService.findAll(paginatedRequest.getRequest(), paginatedRequest.getPaginator().toPageRequest());
     }
 

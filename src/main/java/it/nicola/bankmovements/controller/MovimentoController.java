@@ -76,4 +76,9 @@ public class MovimentoController {
     public Page<MovimentoDto> findByValidoAndNImportazione(Boolean valido, Integer nImportazione, JsonPageRequest pageRequest){
         return movimentoService.findByValidoAndNImportazione(valido, nImportazione, pageRequest.toPageRequest());
     }
+
+    @PostMapping("/updateMovimento")
+    public void updateMovimento(MovimentoDto movimento) {
+        movimentoService.updateMovimento(movimento);
+    }
 }

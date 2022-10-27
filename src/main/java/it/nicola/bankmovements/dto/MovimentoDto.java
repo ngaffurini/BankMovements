@@ -3,6 +3,7 @@ package it.nicola.bankmovements.dto;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,4 +18,6 @@ public class MovimentoDto {
     private String categoria;
     private Integer nImportazione;
     private Boolean valido;
+
+    private List<String> categorieChoice;
 }

@@ -16,4 +16,8 @@ public interface DominiRepository extends MongoRepository<DominiEntity, String> 
     DominiEntity findFirstByDescrizione(String descrizione);
 
     DominiEntity findFirstByDescrizioneAndCodiceAbi(String descrizione, String codiceAbi);
+
+    List<DominiEntity> findByDescrizioneAndCodiceAbi(String descrizione, String codiceAbi);
+
+    List<DominiEntity> findByDescrizione(String descrizione);
 }

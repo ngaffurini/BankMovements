@@ -7,6 +7,7 @@ import it.nicola.bankmovements.repository.DominiRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DominiService {
@@ -35,8 +36,18 @@ public class DominiService {
         return dominiMapper.toDto(dominiRepository.findFirstByDescrizioneAndCodiceAbi(descrizione, codiceAbi));
     }
 
+    public List<DominiDto> getDominiByDescrizioneAndCodiceAbi(String descrizione, String codiceAbi) {
+        return dominiMapper.toDtos(dominiRepository.findByDescrizioneAndCodiceAbi(descrizione, codiceAbi));
+    }
+
     public DominiDto insertDominiEntity(DominiDto dominio){
         DominiEntity dom = dominiMapper.toEntity(dominio);
         return dominiMapper.toDto(dominiRepository.save(dom));
+    }
+
+    public List<String> getListCategorieByDescrizione(String descrizione){
+        List<DominiEntity> domini = dominiRepository.findByDescrizione(descrizione);
+
+        return domini.stream().map(DominiEntity::getCategoria).collect(Collectors.toList());
     }
 }

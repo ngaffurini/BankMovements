@@ -56,6 +56,7 @@ public class MovimentoService {
         dictionaryCodiciABI.put("50", new ResolverMovimentiAddebito(dominiService));
         dictionaryCodiciABI.put("60", new ResolverMovimentiGenerici(dominiService));
         dictionaryCodiciABI.put("66", new ResolverMovimentiTasseConto(dominiService));
+        dictionaryCodiciABI.put("68", new ResolverMovimentiGenerici(dominiService));
         dictionaryCodiciABI.put("91", new ResolverMovimentiGenerici(dominiService));
     }
 
@@ -74,14 +75,22 @@ public class MovimentoService {
         if(movimentoEntitiesList == null)
             return null;
 
+        //Controllo per ciascun movimento recuperato se è presente la categoria. Se è null:
+        // 1) recupero le n possibili alternative nel caso ci siano più possibilità tra i domini
+        // 2) ritorno null se sui domini non c'è nulla
+        List<MovimentoDto> movimenti = movimentoMapper.toDtos(movimentoEntitiesList.getContent());
+        movimenti.stream().filter(m -> m.getCategoria() == null)
+                        .forEach(m -> m.setCategorieChoice(dominiService.getListCategorieByDescrizione(m.getDescrizione())));
+
         return new PageImpl<>(
-                movimentoMapper.toDtos(movimentoEntitiesList.getContent()),
+                movimenti,
                 movimentoEntitiesList.getPageable(),
                 movimentoEntitiesList.getTotalElements());
     }
 
     public Integer importMovimentiFromXls() throws IOException, ParseException {
-        try(FileInputStream in = new FileInputStream("C:\\Users\\nicol\\Desktop\\BankMovement TEST\\XLS import\\Movimenti2022.xls")){
+        //try(FileInputStream in = new FileInputStream("C:\\Users\\nicol\\Desktop\\BankMovement TEST\\XLS import\\Movimenti2022.xls")){
+        try(FileInputStream in = new FileInputStream("C:\\Documenti\\Documenti Vari\\Banca\\Saldo\\2022\\Movimenti fino al 30-06.xls")){
             return processXlsBanksMovement(new HSSFWorkbook(in));
         }
     }
@@ -91,7 +100,11 @@ public class MovimentoService {
 
         if(!mov.isPresent())
             throw new CustomNotFoundException(ErrorType.MOVIMENTO_NON_TROVATO);
-        return movimentoMapper.toDto(mov.get());
+        MovimentoDto movDto = movimentoMapper.toDto(mov.get());
+        if(movDto.getCategoria() == null)
+            movDto.setCategorieChoice(dominiService.getListCategorieByDescrizione(movDto.getDescrizione()));
+
+        return movDto;
     }
 
     private Integer processXlsBanksMovement(HSSFWorkbook workbook) throws ParseException{
@@ -210,5 +223,9 @@ public class MovimentoService {
 
     public List<MovimentoDto> findByNImportazioneList(Integer nImportazione) {
         return movimentoMapper.toDtos(movimentoRepository.findBynImportazione(nImportazione));
+    }
+
+    public void updateMovimento(MovimentoDto movimentoDto){
+        movimentoRepository.save(movimentoMapper.toEntity(movimentoDto));
     }
 }

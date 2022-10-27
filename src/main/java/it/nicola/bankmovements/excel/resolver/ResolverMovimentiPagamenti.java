@@ -6,6 +6,8 @@ import it.nicola.bankmovements.service.impl.DominiService;
 import it.nicola.bankmovements.xls.XLSModel;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 @Slf4j
 public class ResolverMovimentiPagamenti extends DynamicAutocompleteMov{
 
@@ -26,10 +28,10 @@ public class ResolverMovimentiPagamenti extends DynamicAutocompleteMov{
             descrizione = xlsModel.getDescrizione();
         }
 
-        DominiDto ds = dominiService.getDominioByDescrizioneAndCodiceAbi(descrizione, xlsModel.getCausaleABI());
+        List<DominiDto> ds = dominiService.getDominiByDescrizioneAndCodiceAbi(descrizione, xlsModel.getCausaleABI());
 
-        if(ds != null) {
-            mov.setCategoria(ds.getCategoria());
+        if(ds != null && ds.size() == 1) {
+            mov.setCategoria(ds.get(0).getCategoria());
         }
 
         mov.setDescrizione(descrizione);

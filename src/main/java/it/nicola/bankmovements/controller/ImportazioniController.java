@@ -1,15 +1,12 @@
 package it.nicola.bankmovements.controller;
 
 import it.nicola.bankmovements.dto.ImportazioneDto;
-import it.nicola.bankmovements.entity.ImportazioneEntity;
 import it.nicola.bankmovements.model.FiltriImportazione;
-import it.nicola.bankmovements.model.JsonPageRequest;
 import it.nicola.bankmovements.model.PaginatedRequest;
 import it.nicola.bankmovements.service.impl.ImportazioniService;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController

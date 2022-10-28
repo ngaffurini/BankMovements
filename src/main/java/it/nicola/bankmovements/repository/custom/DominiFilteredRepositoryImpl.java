@@ -42,4 +42,11 @@ public class DominiFilteredRepositoryImpl implements DominiFilteredRepository {
                 pageable,
                 numElementi);
     }
+
+    @Override
+    public List<String> getListCategorieDistinct() {
+        Query query = new Query();
+
+        return mongoTemplate.findDistinct(query, "categoria", DominiEntity.class, String.class);
+    }
 }

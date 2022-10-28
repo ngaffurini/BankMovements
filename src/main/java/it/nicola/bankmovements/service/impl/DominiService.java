@@ -29,7 +29,7 @@ public class DominiService {
     }
 
     public List<String> getDistinctCategoriaDomini(){
-        return dominiRepository.getDistinctByCategoria();
+        return dominiRepository.getListCategorieDistinct();
     }
 
     public DominiDto getDominioByDescrizione(String descrizione) {
@@ -62,5 +62,13 @@ public class DominiService {
                 dominiMapper.toDtos(dominiList.getContent()),
                 dominiList.getPageable(),
                 dominiList.getTotalElements());
+    }
+
+    public void update(DominiDto dominiDto) {
+        dominiRepository.save(dominiMapper.toEntity(dominiDto));
+    }
+
+    public void delete(DominiDto dominiDto){
+        dominiRepository.delete(dominiMapper.toEntity(dominiDto));
     }
 }

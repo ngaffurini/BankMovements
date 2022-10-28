@@ -29,6 +29,16 @@ public class DominiController {
         return dominiService.insertDominiEntity(dominio);
     }
 
+    @PutMapping("/update")
+    public void update(DominiDto dominiDto){
+        dominiService.update(dominiDto);
+    }
+
+    @DeleteMapping("/delete")
+    public void delete(DominiDto dominiDto){
+        dominiService.delete(dominiDto);
+    }
+
     @PostMapping("/list")
     public Page<DominiDto> getFilteredList(@RequestBody PaginatedRequest<FiltriDomini> filtriDomini){
         return dominiService.getFilteredList(filtriDomini.getRequest(), filtriDomini.getPaginator().toPageRequest());

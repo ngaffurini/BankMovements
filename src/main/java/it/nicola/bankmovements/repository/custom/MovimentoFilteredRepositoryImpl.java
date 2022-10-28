@@ -1,4 +1,4 @@
-package it.nicola.bankmovements.repository;
+package it.nicola.bankmovements.repository.custom;
 
 import it.nicola.bankmovements.entity.MovimentoEntity;
 import it.nicola.bankmovements.model.FiltriMovimenti;

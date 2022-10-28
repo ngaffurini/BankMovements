@@ -2,6 +2,7 @@ package it.nicola.bankmovements.service.impl;
 
 import it.nicola.bankmovements.common.enums.ErrorType;
 import it.nicola.bankmovements.common.exception.CustomNotFoundException;
+import it.nicola.bankmovements.dto.ImportazioneDto;
 import it.nicola.bankmovements.dto.MovimentoDto;
 import it.nicola.bankmovements.entity.ImportazioneEntity;
 import it.nicola.bankmovements.entity.MovimentoEntity;
@@ -108,7 +109,7 @@ public class MovimentoService {
     }
 
     private Integer processXlsBanksMovement(HSSFWorkbook workbook) throws ParseException{
-        ImportazioneEntity imp = importazioniService.insertImportazioni(createImportazione());
+        ImportazioneDto imp = importazioniService.insertImportazioni(createImportazione());
 
         List<MovimentoDto> movimenti = new ArrayList<>();
 

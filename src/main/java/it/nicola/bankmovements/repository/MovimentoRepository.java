@@ -1,6 +1,7 @@
 package it.nicola.bankmovements.repository;
 
 import it.nicola.bankmovements.entity.MovimentoEntity;
+import it.nicola.bankmovements.repository.custom.MovimentoFilteredRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;

@@ -3,7 +3,11 @@ package it.nicola.bankmovements.service.impl;
 import it.nicola.bankmovements.dto.DominiDto;
 import it.nicola.bankmovements.entity.DominiEntity;
 import it.nicola.bankmovements.mapper.DominiMapper;
+import it.nicola.bankmovements.model.FiltriDomini;
 import it.nicola.bankmovements.repository.DominiRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,5 +53,14 @@ public class DominiService {
         List<DominiEntity> domini = dominiRepository.findByDescrizione(descrizione);
 
         return domini.stream().map(DominiEntity::getCategoria).collect(Collectors.toList());
+    }
+
+    public Page<DominiDto> getFilteredList(FiltriDomini request, PageRequest pageRequest) {
+        Page<DominiEntity> dominiList = dominiRepository.getFilteredList(request, pageRequest);
+
+        return new PageImpl<>(
+                dominiMapper.toDtos(dominiList.getContent()),
+                dominiList.getPageable(),
+                dominiList.getTotalElements());
     }
 }

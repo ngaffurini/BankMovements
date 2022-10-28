@@ -1,11 +1,11 @@
 package it.nicola.bankmovements.controller;
 
 import it.nicola.bankmovements.dto.DominiDto;
+import it.nicola.bankmovements.model.FiltriDomini;
+import it.nicola.bankmovements.model.PaginatedRequest;
 import it.nicola.bankmovements.service.impl.DominiService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +27,10 @@ public class DominiController {
     @PostMapping("/insert")
     public DominiDto insertDominiEntity(DominiDto dominio){
         return dominiService.insertDominiEntity(dominio);
+    }
+
+    @PostMapping("/list")
+    public Page<DominiDto> getFilteredList(@RequestBody PaginatedRequest<FiltriDomini> filtriDomini){
+        return dominiService.getFilteredList(filtriDomini.getRequest(), filtriDomini.getPaginator().toPageRequest());
     }
 }

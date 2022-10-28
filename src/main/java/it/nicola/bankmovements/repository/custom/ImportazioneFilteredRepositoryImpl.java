@@ -26,9 +26,9 @@ public class ImportazioneFilteredRepositoryImpl implements ImportazioneFilteredR
         final List<Criteria> criteriaList = new ArrayList<>();
         if(request.getDateFrom() != null)
             criteriaList.add(Criteria.where("dataImportazione").gte(request.getDateFrom()));
-        else if(request.getDateTo() != null)
+        if(request.getDateTo() != null)
             criteriaList.add(new Criteria("dataImportazione").lte(request.getDateTo()));
-        else if(StringUtils.isNotBlank(request.getDescrizione()))
+        if(StringUtils.isNotBlank(request.getDescrizione()))
             criteriaList.add(Criteria.where("descrizione").regex(request.getDescrizione()));
 
         if(!criteriaList.isEmpty()) {

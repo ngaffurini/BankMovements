@@ -28,13 +28,13 @@ public class MovimentoFilteredRepositoryImpl implements MovimentoFilteredReposit
         final List<Criteria> criteriaList = new ArrayList<>();
         if(StringUtils.isNotBlank(movimenti.getCategoria()))
             criteriaList.add(Criteria.where("categoria").is(movimenti.getCategoria()));
-        else if(StringUtils.isNotBlank(movimenti.getDescrizione()))
+        if(StringUtils.isNotBlank(movimenti.getDescrizione()))
             criteriaList.add(Criteria.where("descrizione").regex(movimenti.getDescrizione()));
-        else if(movimenti.getData() != null)
+        if(movimenti.getData() != null)
             criteriaList.add(new Criteria("data").is(movimenti.getData()));
-        else if(movimenti.getImporto() != null)
+        if(movimenti.getImporto() != null)
             criteriaList.add(new Criteria("importo").is(movimenti.getImporto()));
-        else if(movimenti.getNImportazione() != null)
+        if(movimenti.getNImportazione() != null)
             criteriaList.add(new Criteria("nImportazione").is(movimenti.getNImportazione()));
 
         if(!criteriaList.isEmpty()) {

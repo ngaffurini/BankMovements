@@ -1,7 +1,6 @@
 package it.nicola.bankmovements.repository.custom;
 
 import it.nicola.bankmovements.entity.DominiEntity;
-import it.nicola.bankmovements.entity.ImportazioneEntity;
 import it.nicola.bankmovements.model.FiltriDomini;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
